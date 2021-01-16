@@ -141,6 +141,10 @@ static bool add_plane(struct wlr_drm_backend *drm,
 		struct drm_format_modifier *mods = (struct drm_format_modifier *)
 			((char *)data + data->modifiers_offset);
 		for (uint32_t i = 0; i < data->count_modifiers; ++i) {
+			if (mods[i].modifier == I915_FORMAT_MOD_Y_TILED_CCS ||
+				mods[i].modifier == I915_FORMAT_MOD_Yf_TILED_CCS) {
+				continue;
+			}
 			for (int j = 0; j < 64; ++j) {
 				if (mods[i].formats & ((uint64_t)1 << j)) {
 					wlr_drm_format_set_add(&p->formats,
